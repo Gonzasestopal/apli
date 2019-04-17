@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from .models import AvailableChange
 
 # Create your views here.
-def test(request):
+def save_payment(request):
     
     price_per_hour = 2
     
@@ -19,51 +19,49 @@ def test(request):
     now = request.POST.get('now', datetime.now())
     access_time = request.POST.get('access_time', datetime.now() - timedelta(hours = 2))
     
-    user_payment = 6
+    user_payment = request.POST.get('payment', 6)
 
     duration = now - access_time
     
     duration_in_s = duration.total_seconds() 
     
-    duration_in_h = (duration_in_s / 3600)
+    duration_in_h = int(round(duration_in_s / 3600)) # 2 for now
     
-    payment_due = int(price_per_hour * duration_in_h)
+    total_cost = int(price_per_hour * duration_in_h)
     
-    payment_change = int(user_payment - payment_due)
+    payment_change = abs(int(total_cost - user_payment))
     
-    print(payment_change, 'hours', payment_due)
-    
-    while payment_change > 0:
+    while total_cost > 0:
         
-        print(payment_change, payment_change // available_change.two)
-        
-        if payment_change // (available_change.hundred * 100) >= 1:
+        if available_change.total_cost // (available_change.hundred * 100) >= 1: 
             
-            payment_change -= 100 * (payment_change // available_change.hundred)
+            total_cost -= 100 * (total_cost // available_change.hundred)
             
-            available_change.hundred -= payment_change
+            available_change.hundred = total_cost // available_change.hundred
             
-        elif payment_change // (available_change.fifty * 50) >= 1:
+        elif available_change.fifty and total_cost // (available_change.fifty * 50) >= 1:
             
-            payment_change -= 50 * (payment_change // available_change.fifty)
+            total_cost -= 50 * (total_cost // available_change.fifty)
+            
+            available_change.fifty = total_cost // available_change.fifty
 
-        elif payment_change // (available_change.five * 5) >= 1:
+        elif available_change.five and total_cost // (available_change.five * 5) >= 1:
             
-            payment_change -= 5 * (payment_change // available_change.five)
-            
-            print('aye')
+            total_cost -= 5 * (total_cost // available_change.five)
 
-        elif payment_change // (available_change.two * 2) >= 1:
-            
-            print('ok')
-            
-            payment_change -= 2 * (payment_change // available_change.two)
+            available_change.five = total_cost // available_change.five
 
-        elif payment_change // (available_change.one * 1) >= 1:
+        elif available_change.two and total_cost // (available_change.two * 2) >= 1:
             
-            print('hmm', payment_change)
+            total_cost -= 2 * (total_cost // available_change.two)
             
-            payment_change -= 1 * (payment_change // available_change.one)
+            available_change.two = total_cost // available_change.two
+
+        elif available_change.one and total_cost // (available_change.one * 1) >= 1:
+            
+            total_cost -= 1 * (total_cost // available_change.one)
+            
+            available_change.one -= total_cost // available_change.one
         
         else:
             
@@ -73,7 +71,7 @@ def test(request):
     
     return JsonResponse({'change': payment_change})
     
-def available_change(request):
+def get_change(request):
     
     available_change = AvailableChange.objects.get(pk=1)
     
