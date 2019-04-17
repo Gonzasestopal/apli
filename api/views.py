@@ -78,7 +78,7 @@ def get_change(request):
     return JsonResponse({
         'one': available_change.one, 
         'two': available_change.two, 
-        'five': available_change.five,
+        'ten': available_change.five,
         'fifty': available_change.fifty,
         'hundred': available_change.hundred
     })

@@ -9,18 +9,19 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 export class AppService {
   
   private _url = "http://localhost:8000";
+  
+  private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient) { }
   
   public get_change() {
     return this.http
-      .get(this._url + '/change/')
+      .get(this._url + '/change/', {'headers': this.headers})
   }
   
-  public save_payment() {
-    let options = new HttpHeaders({ 'Content-Type': 'application/json' });
+  public save_payment(total) {
     return this.http
-      .post(this._url + '/pay/', options)
+      .post(this._url + '/pay/', total, {'headers': this.headers})
   }
 
   private handleError(error: Response) {

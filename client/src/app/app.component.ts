@@ -8,10 +8,7 @@ import { AppService } from './app.service';
 })
 export class AppComponent {
   
-  test;
-  
   public availableChange: any = {}
-  
   
   public pay1: number; pay2: number; pay3: number; pay4: number; pay5: number;
   
