@@ -1,0 +1,142 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="container mt-4">
+  
+  <h1>Supply-R Parking Payment Machine</h1>
+  
+  <form class="mt-4">
+    
+    <div class="form-row">
+      <div class="form-group col-4">
+        <div class="input-group">
+          <input type="text" class="form-control">
+          <div class="input-group-append">
+            <input class="form-control" type="number">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group col-4">
+        <div class="input-group">
+          <input type="text" class="form-control">
+          <div class="input-group-append">
+            <input class="form-control" type="number">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group col-4">
+        <div class="input-group">
+          <input type="text" class="form-control">
+          <div class="input-group-append">
+            <input class="form-control" type="number">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group col-4">
+        <div class="input-group">
+          <input type="text" class="form-control">
+          <div class="input-group-append">
+            <input class="form-control" type="number">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group col-4">
+        <div class="input-group">
+          <input type="text" class="form-control">
+          <div class="input-group-append">
+            <input class="form-control" type="number">
+          </div>
+        </div>
+      </div>
+      
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle-thin fa-stack-2x"></i>
+        <i class="fa fa-plus fa-stack-1x"></i>
+      </span>
+    
+    </div>
+      
+      <div class="border border-secondary p-5">
+
+        <div class="offset-3 col-md-6">
+          <h3 class="text-right">Current Time: {{now | date: "H:mm"}}</h3>
+          
+          <div class="border border-secondary p-4">  
+              <p>Access time: {{access_time | date: "H:mm"}}</p>
+              <input type="text" class="form-control">
+              <p class="font-weight-bold mt-2">Total cost: $6</p>
+          </div>
+          
+          <p class="mt-5">Paid with:</p>
+          
+          <div class="form-row m-0">
+            <div class="form-group" style="width:20%">
+              <label for="name" class="control-label">$1</label>
+              <input class="form-control" name="pay1" [value]="pay1" type="number" #pay1>
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$2</label>
+              <input class="form-control" name="pay2" type="number" #pay2>
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$10</label>
+              <input class="form-control" name="pay3" type="number" #pay10>
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$50</label>
+              <input class="form-control"name="pay4" type="number" #pay50>
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$100</label>
+              <input class="form-control" name="pay5" type="number" #pay100>
+            </div>
+          </div>
+          
+          <div class="btn btn-secondary float-right" (click)="pay(pay1, pay1.value)">Pay</div>
+
+          <p class="mt-5">Change:</p>
+          
+          <div class="form-row m-0">
+            <div class="form-group" style="width:20%">
+              <label for="name" class="control-label">$1</label>
+              <input class="form-control" type="number">
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$2</label>
+              <input class="form-control" type="number">
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$10</label>
+              <input class="form-control" type="number">
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$50</label>
+              <input class="form-control" type="number">
+            </div>
+
+            <div class="form-group pl-1" style="width:20%">
+              <label for="name" class="control-label">$100</label>
+              <input class="form-control" type="number">
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+
+  
+  </form>
+
+</div>
+
