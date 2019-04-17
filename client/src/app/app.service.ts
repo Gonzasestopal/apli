@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http'; 
 import { Observable } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
@@ -12,9 +12,15 @@ export class AppService {
 
   constructor(private http: HttpClient) { }
   
-  public test() {
+  public get_change() {
     return this.http
-      .get(this._url + 'test')
+      .get(this._url + '/change')
+  }
+  
+  public save_payment() {
+    let options = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .post(this._url + '/pay', options)
   }
 
   private handleError(error: Response) {

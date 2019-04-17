@@ -16,13 +16,16 @@ export class AppComponent {
   
   public access_time: Date;
   
-  pay(pay1,pay2,pay3,pay4, pay5) {
-    console.log(pay1,pay2,pay3,pay4,pay5)
-    this.appService.test()
+  pay() {
+    this.appService.get_change()
       .subscribe(res => {
         console.log(res)
         this.test = res
       })
+  }
+  
+  ngOnInit() {
+    console.log('aye')
   }
   
   constructor(private appService: AppService) {
