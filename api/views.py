@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from .models import AvailableChange
 
 # Create your views here.
+@csrf_exempt
 def save_payment(request):
     
     price_per_hour = 2
@@ -70,7 +71,8 @@ def save_payment(request):
     available_change.save()
     
     return JsonResponse({'change': payment_change})
-    
+
+@csrf_exempt    
 def get_change(request):
     
     available_change = AvailableChange.objects.get(pk=1)
