@@ -8,19 +8,19 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 })
 export class AppService {
   
-  private _url = 'http://127.0.0.1:8080/'
+  private _url = "http://localhost:8000";
 
   constructor(private http: HttpClient) { }
   
   public get_change() {
     return this.http
-      .get(this._url + '/change')
+      .get(this._url + '/change/')
   }
   
   public save_payment() {
     let options = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post(this._url + '/pay', options)
+      .post(this._url + '/pay/', options)
   }
 
   private handleError(error: Response) {
