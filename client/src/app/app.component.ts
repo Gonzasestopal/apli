@@ -8,40 +8,45 @@ import { AppService } from './app.service';
 })
 export class AppComponent {
   
+  public total_cost : number;
+  
   public availableChange: any = {}
   
   public pay1: number; pay2: number; pay3: number; pay4: number; pay5: number;
   
-  public now: Date =  new Date()
+  public now: Date;
   
-  public access_time: Date = new Date(this.now.getTime() - (1000*60*60));
-  
-  public diff: number = this.now.getTime() -  this.access_time.getTime();
-  
-  public total_cost: number = (this.diff % 86400000);
+  public access_time: Date;
   
   pay() {
-    this.appService.save_payment()
+    let total = this.pay1 + this.pay2 + this.pay3 + this.pay4 + this.pay5
+    this.appService.save_payment(total)
       .subscribe(res => {
-        console.log(res)
-        this.test = res
+        this.appService.get_change()
       })
   }
   
   ngOnInit() {
-    
-    console.log(this.total_cost)
     this.appService.get_change()
       .subscribe(res => {
         this.availableChange = res
-        
       })
     
   }
   
   constructor(private appService: AppService) {
     
-    this.access_time = new Date(this.now.setHours(this.now.getHours() - 2))
+    const HOUR_PRICE = 2;
+    
+    this.now = new Date();
+    
+    let access_time = new Date()
+    
+    this.access_time = new Date(access_time.setHours(this.now.getHours() - 2))
+
+    let diff: number = Math.abs(this.now.getTime() -  this.access_time.getTime()) / 36e5;
+    
+    this.total_cost =  diff * HOUR_PRICE
     
     setInterval(() => {
       this.now = new Date()

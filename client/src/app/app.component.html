@@ -66,9 +66,9 @@
           <h3 class="text-right">Current Time: {{now | date: "H:mm"}}</h3>
           
           <div class="border border-secondary p-4">  
-              <p>Access time: {{access_time | date: "H:mm"}}</p>
-              <input type="text" class="form-control">
-              <p class="font-weight-bold mt-2">Total cost: $6</p>
+              <p>Access time:</p>
+              <input type="text" class="form-control" value='{{access_time | date: "H:mm"}}' disabled>
+              <p class="font-weight-bold mt-2">Total cost: {{total_cost}}</p>
           </div>
           
           <p class="mt-5">Paid with:</p>
