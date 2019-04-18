@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http'; 
 
 import { AppService } from './app.service';
 
@@ -13,7 +13,11 @@ import { AppService } from './app.service';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken'
+    })
   ],
   providers: [
     AppService

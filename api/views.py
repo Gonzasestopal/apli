@@ -9,67 +9,125 @@ from datetime import datetime, timedelta
 
 from .models import AvailableChange
 
+import json
+
+def parse_int(s, base=10):
+    if s.isdigit():
+        return int(s, base)
+    else:
+        return 0
+
 # Create your views here.
 def save_payment(request):
     
-    price_per_hour = 2
+    data = json.loads(request.body)
+    
+    print(data)
+    
+    total_cost = data['totalCost']
     
     available_change = AvailableChange.objects.get(pk=1)
     
-    now = request.POST.get('now', datetime.now())
-    access_time = request.POST.get('access_time', datetime.now() - timedelta(hours = 2))
+    payment = parse_int(data['oneChange']) * 1 + parse_int(data['twoChange']) * 2 + parse_int(data['tenChange']) * 10 + parse_int(data['fiftyChange']) * 50 + parse_int(data['hundredChange']) * 100
     
-    user_payment = request.POST.get('payment', 6)
+    payment_change = payment - total_cost
+            
+    print(payment, total_cost, payment - total_cost, 'change')
+    
+    if payment - total_cost:
+    
+        while total_cost > 0:
+            
+            if parse_int(data['hundredChange']) >= 1 : 
+                
+                total_cost -= 100 * parse_int(data['hundredChange'])
+                
+                available_change.hundred += parse_int(data['hundredChange'])
+                
+            if  parse_int(data['fiftyChange']) >= 1:
+                
+                total_cost -= 50 *  parse_int(data['fiftyChange'])
+                
+                available_change.fifty += parse_int(data['fiftyChange'])
 
-    duration = now - access_time
+            if  parse_int(data['tenChange']) >= 1:
+                
+                print(data['tenChange'], 'wtf')
+                
+                total_cost -= 10 *  parse_int(data['tenChange'])
+
+                available_change.ten +=  parse_int(data['tenChange'])
+
+            if  parse_int(data['twoChange']) >= 1:
+                
+                print('ye')
+                
+                total_cost -= 2 *  parse_int(data['twoChange'])
+                
+                available_change.two +=  parse_int(data['twoChange'])
+
+            if  parse_int(data['oneChange']) >= 1:
+                
+                total_cost -= 1 *  parse_int(data['oneChange'])
+                
+                available_change.one +=  parse_int(data['oneChange'])
+                
     
-    duration_in_s = duration.total_seconds() 
-    
-    duration_in_h = int(round(duration_in_s / 3600)) # 2 for now
-    
-    total_cost = int(price_per_hour * duration_in_h)
-    
-    payment_change = abs(int(total_cost - user_payment))
-    
-    while total_cost > 0:
+    print('payment_change', payment_change)
+
+
+    while payment_change > 0:
         
-        if available_change.total_cost // (available_change.hundred * 100) >= 1: 
+        print(payment_change)
+        
+        if payment_change // 100 >= 1:
             
-            total_cost -= 100 * (total_cost // available_change.hundred)
+            available_change.hundred -= payment_change // 100
             
-            available_change.hundred = total_cost // available_change.hundred
-            
-        elif available_change.fifty and total_cost // (available_change.fifty * 50) >= 1:
-            
-            total_cost -= 50 * (total_cost // available_change.fifty)
-            
-            available_change.fifty = total_cost // available_change.fifty
+            payment_change -= 100 * (payment_change // 100)
 
-        elif available_change.five and total_cost // (available_change.five * 5) >= 1:
+        elif payment_change // 50 >= 1:
             
-            total_cost -= 5 * (total_cost // available_change.five)
+            available_change.fifty -= payment_change // 50
+            
+            payment_change -= 50 * (payment_change // 50)
 
-            available_change.five = total_cost // available_change.five
+        elif payment_change // 10 >= 1:
+            
+            print('rip')
+            
+            available_change.ten -= payment_change // 10
+            
+            payment_change -= 10 * (payment_change // 10)
 
-        elif available_change.two and total_cost // (available_change.two * 2) >= 1:
+        elif payment_change // 2 >= 1:
             
-            total_cost -= 2 * (total_cost // available_change.two)
+            print('oki')
             
-            available_change.two = total_cost // available_change.two
+            available_change.two -= payment_change // 2
+            
+            payment_change -= 2 * (payment_change // 2)
 
-        elif available_change.one and total_cost // (available_change.one * 1) >= 1:
+        elif payment_change // 1 >= 1:
             
-            total_cost -= 1 * (total_cost // available_change.one)
+            available_change.one -= payment_change // 1
             
-            available_change.one -= total_cost // available_change.one
+            payment_change -= 1 * (payment_change // 1)
         
         else:
             
             return JsonResponse({'error': "Unavaiable change"})
     
+        
     available_change.save()
-    
-    return JsonResponse({'change': payment_change})
+        
+    return JsonResponse({
+        'oneChange': available_change.one, 
+        'twoChange': available_change.two, 
+        'tenChange': available_change.ten, 
+        'fiftyChange': available_change.fifty, 
+        'hundredChange': available_change.hundred
+    })
 
 
 def get_change(request):
@@ -79,7 +137,7 @@ def get_change(request):
     return JsonResponse({
         'one': available_change.one, 
         'two': available_change.two, 
-        'ten': available_change.five,
+        'ten': available_change.ten,
         'fifty': available_change.fifty,
         'hundred': available_change.hundred
     })

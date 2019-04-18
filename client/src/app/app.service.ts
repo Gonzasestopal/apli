@@ -8,20 +8,20 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 })
 export class AppService {
   
-  private _url = "http://localhost:8000";
+  private _url = "//localhost:8000";
   
   private headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient) { }
   
-  public get_change() {
+  public getChange() {
     return this.http
       .get(this._url + '/change/', {'headers': this.headers})
   }
   
-  public save_payment(total) {
+  public savePayment(oneChange, twoChange, tenChange, fiftyChange, hundredChange, totalCost) {
     return this.http
-      .post(this._url + '/pay/', total, {'headers': this.headers})
+      .post(this._url + '/pay/', {oneChange, twoChange, tenChange, fiftyChange, hundredChange, totalCost}, {'headers': this.headers, withCredentials: true})
   }
 
   private handleError(error: Response) {
