@@ -42,7 +42,7 @@ export class AppComponent {
     
     let access_time = new Date()
     
-    this.access_time = new Date(access_time.setHours(this.now.getHours() - 2))
+    this.access_time = new Date(access_time.setHours(this.now.getHours() - (Math.floor(Math.random() * 6) + 1) ))
 
     let diff: number = Math.abs(this.now.getTime() -  this.access_time.getTime()) / 36e5;
     
