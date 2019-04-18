@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 
 from .models import AvailableChange
 
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 @csrf_exempt
 def save_payment(request):
