@@ -39,11 +39,11 @@ export class AppComponent {
     } else {
       this.appService.savePayment(oneChangeInput.value, twoChangeInput.value, tenChangeInput.value, fiftyChangeInput.value, hundredChangeInput.value, this.total_cost)
         .subscribe(res => {
-          this.availableChangeOne.nativeElement.value = res.oneChange;
-          this.availableChangeTwo.nativeElement.value = res.twoChange;
-          this.availableChangeTen.nativeElement.value = res.tenChange;
-          this.availableChangeFifty.nativeElement.value = res.fiftyChange;
-          this.availableChangeHundred.nativeElement.value = res.hundredChange;
+          this.availableChangeOne.nativeElement.value = res["oneChange"];
+          this.availableChangeTwo.nativeElement.value = res["twoChange"];
+          this.availableChangeTen.nativeElement.value = res["tenChange"];
+          this.availableChangeFifty.nativeElement.value = res["fiftyChange"];
+          this.availableChangeHundred.nativeElement.value = res["hundredChange"];
           
           this.oneChangeInput.nativeElement.value = "";
           this.twoChangeInput.nativeElement.value = "";
