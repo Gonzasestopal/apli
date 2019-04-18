@@ -7,6 +7,15 @@
 # Only exists if Bazel was run
 /bazel-out
 
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media
+
 # dependencies
 /node_modules
 
