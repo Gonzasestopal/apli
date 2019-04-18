@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = (    
     '0.0.0.0:80',
+    'ec2-52-14-210-85.us-east-2.compute.amazonaws.com',
+    '52.14.210.85'
 )
 
 CORS_ORIGIN_ALLOW_ALL = True

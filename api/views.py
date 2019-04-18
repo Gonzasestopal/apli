@@ -9,10 +9,7 @@ from datetime import datetime, timedelta
 
 from .models import AvailableChange
 
-from django.views.decorators.csrf import csrf_exempt
-
 # Create your views here.
-@csrf_exempt
 def save_payment(request):
     
     price_per_hour = 2
@@ -74,7 +71,7 @@ def save_payment(request):
     
     return JsonResponse({'change': payment_change})
 
-@csrf_exempt    
+
 def get_change(request):
     
     available_change = AvailableChange.objects.get(pk=1)
