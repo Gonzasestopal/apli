@@ -12,6 +12,9 @@ from .models import AvailableChange
 import json
 
 def parse_int(s, base=10):
+    '''
+    Helper to parse from JSON to integer.
+    '''
     if s.isdigit():
         return int(s, base)
     else:
@@ -19,10 +22,11 @@ def parse_int(s, base=10):
 
 # Create your views here.
 def save_payment(request):
+    '''
+    Performs payment operation and returns change with mininum amount of coins required.
+    '''
     
     data = json.loads(request.body)
-    
-    print(data)
     
     total_cost = data['totalCost']
     
@@ -31,8 +35,6 @@ def save_payment(request):
     payment = parse_int(data['oneChange']) * 1 + parse_int(data['twoChange']) * 2 + parse_int(data['tenChange']) * 10 + parse_int(data['fiftyChange']) * 50 + parse_int(data['hundredChange']) * 100
     
     payment_change = payment - total_cost
-            
-    print(payment, total_cost, payment - total_cost, 'change')
     
     if payment - total_cost:
     
@@ -60,8 +62,6 @@ def save_payment(request):
 
             if  parse_int(data['twoChange']) >= 1:
                 
-                print('ye')
-                
                 total_cost -= 2 *  parse_int(data['twoChange'])
                 
                 available_change.two +=  parse_int(data['twoChange'])
@@ -71,30 +71,30 @@ def save_payment(request):
                 total_cost -= 1 *  parse_int(data['oneChange'])
                 
                 available_change.one +=  parse_int(data['oneChange'])
-                
     
-    print('payment_change', payment_change)
-
+    user_change = {'oneChange': 0, 'twoChange': 0, 'tenChange': 0, 'fiftyChange': 0, 'hundredChange': 0}
 
     while payment_change > 0:
         
-        print(payment_change)
-        
         if payment_change // 100 >= 1:
+
+            user_change['hundredChange'] = payment_change // 100
             
             available_change.hundred -= payment_change // 100
             
             payment_change -= 100 * (payment_change // 100)
 
         elif payment_change // 50 >= 1:
+
+            user_change['fiftyChange'] = payment_change // 50
             
             available_change.fifty -= payment_change // 50
             
             payment_change -= 50 * (payment_change // 50)
 
         elif payment_change // 10 >= 1:
-            
-            print('rip')
+
+            user_change['tenChange'] = payment_change // 10
             
             available_change.ten -= payment_change // 10
             
@@ -102,13 +102,15 @@ def save_payment(request):
 
         elif payment_change // 2 >= 1:
             
-            print('oki')
+            user_change['twoChange'] = payment_change // 2
             
             available_change.two -= payment_change // 2
             
             payment_change -= 2 * (payment_change // 2)
 
         elif payment_change // 1 >= 1:
+            
+            user_change['oneChange'] = payment_change // 1
             
             available_change.one -= payment_change // 1
             
@@ -117,20 +119,16 @@ def save_payment(request):
         else:
             
             return JsonResponse({'error': "Unavaiable change"})
-    
         
     available_change.save()
         
-    return JsonResponse({
-        'oneChange': available_change.one, 
-        'twoChange': available_change.two, 
-        'tenChange': available_change.ten, 
-        'fiftyChange': available_change.fifty, 
-        'hundredChange': available_change.hundred
-    })
+    return JsonResponse(user_change)
 
 
 def get_change(request):
+    '''
+    Retrieves available change in all denominations.
+    '''
     
     available_change = AvailableChange.objects.get(pk=1)
     

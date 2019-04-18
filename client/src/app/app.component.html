@@ -4,51 +4,24 @@
   <h1>Supply-R Parking Payment Machine</h1>
   
   <form class="mt-4">
-    
+  
     <div class="form-row">
-      <div class="form-group col-4">
+      <div *ngFor="let number of [1,2,5]" class="form-group col-4">
         <div class="input-group">
           <input type="text" class="form-control">
           <div class="input-group-append">
-            <input class="form-control" type="number" value="1" disabled>
+            <input class="form-control" type="number" min="0" value="{{number}}" disabled>
           </div>
-        </div>
-      </div>
-      
-      <div class="form-group col-4">
-        <div class="input-group">
-          <input type="text" class="form-control">
-          <div class="input-group-append">
-            <input class="form-control" type="number" value="2" disabled>
-          </div>
-        </div>
-      </div>
-      
-      <div class="form-group col-4">
-        <div class="input-group">
-          <input type="text" class="form-control">
-          <div class="input-group-append">
-            <input class="form-control" type="number" value="5" disabled>
-          </div>
-        </div>
+        </div> 
       </div>
     </div>
     
     <div class="form-row">
-      <div class="form-group col-4">
+      <div *ngFor="let number of [50,100]" class="form-group col-4">
         <div class="input-group">
           <input type="text" class="form-control">
           <div class="input-group-append">
-            <input class="form-control" type="number" value="50" disabled>
-          </div>
-        </div>
-      </div>
-      
-      <div class="form-group col-4">
-        <div class="input-group">
-          <input type="text" class="form-control">
-          <div class="input-group-append">
-            <input class="form-control" type="number" value="100" disabled>
+            <input class="form-control" type="number" min="0" value="{{number}}" disabled>
           </div>
         </div>
       </div>
@@ -67,36 +40,46 @@
           
           <div class="border border-secondary p-4">  
               <p>Access time:</p>
-              <input type="text" class="form-control" value='{{access_time | date: "H:mm"}}' disabled>
-              <p class="font-weight-bold mt-2">Total cost: {{total_cost}}</p>
+              <input type="text" class="form-control" value='{{accessTime | date: "H:mm"}}' disabled>
+              <p class="font-weight-bold mt-2">Total cost: {{totalCost}}</p>
           </div>
           
           <p class="mt-5">Paid with:</p>
+
+          
+          <div *ngIf="!validPayment" class="alert alert-danger" role="alert">
+            Please insert a valid payment.
+          </div>
+
+          <div *ngIf="hasChange" class="alert alert-success" role="alert">
+            Heres your change.
+          </div>
           
           <div class="form-row m-0">
+            
             <div class="form-group" style="width:20%">
               <label for="name" class="control-label">$1</label>
-              <input class="form-control" name="pay1" type="number" #oneChangeInput>
+              <input class="form-control" name="pay1" type="number" min="0" #oneChangeInput value="0" >
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$2</label>
-              <input class="form-control" name="pay2" type="number" #twoChangeInput>
+              <input class="form-control" name="pay2" type="number" min="0" #twoChangeInput value="0" >
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$10</label>
-              <input class="form-control" name="pay3" type="number" #tenChangeInput>
+              <input class="form-control" name="pay3" type="number" min="0" #tenChangeInput value="0" >
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$50</label>
-              <input class="form-control"name="pay4" type="number" #fiftyChangeInput>
+              <input class="form-control"name="pay4" type="number" min="0" #fiftyChangeInput value="0" >
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$100</label>
-              <input class="form-control" name="pay5" type="number" #hundredChangeInput>
+              <input class="form-control" name="pay5" type="number" min="0" #hundredChangeInput value="0" >
             </div>
           </div>
           
@@ -107,27 +90,27 @@
           <div class="form-row m-0">
             <div class="form-group" style="width:20%">
               <label for="name" class="control-label">$1</label>
-              <input class="form-control" type="number" #availableChangeOne value="{{availableChange?.one}}">
+              <input class="form-control" type="number" min="0" #availableChangeOne value="0">
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$2</label>
-              <input class="form-control" type="number" #availableChangeTwo value="{{availableChange?.two}}">
+              <input class="form-control" type="number" min="0" #availableChangeTwo value="0">
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$10</label>
-              <input class="form-control" type="number" #availableChangeTen value="{{availableChange?.ten}}">
+              <input class="form-control" type="number" min="0" #availableChangeTen value="0">
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$50</label>
-              <input class="form-control" type="number" #availableChangeFifty value="{{availableChange?.fifty}}">
+              <input class="form-control" type="number" min="0" #availableChangeFifty value="0">
             </div>
 
             <div class="form-group pl-1" style="width:20%">
               <label for="name" class="control-label">$100</label>
-              <input class="form-control" type="number" #availableChangeHundred value="{{availableChange?.hundred}}">
+              <input class="form-control" type="number" min="0" #availableChangeHundred value="0">
             </div>
           </div>
           

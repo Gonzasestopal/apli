@@ -24,39 +24,58 @@ export class AppComponent {
   @ViewChild('hundredChangeInput') hundredChangeInput;
   
   
-  public total_cost : number;
+  public totalCost : number;
   
-  public availableChange: any = {}
+  public validPayment: boolean = true;
+  
+  public hasChange: boolean;
+  
+  public accessTime: Date;
   
   public now: Date;
   
-  public access_time: Date;
+  public availableChange: any = {}
+
+  updatePayment() { }
   
   savePayment(oneChangeInput, twoChangeInput, tenChangeInput, fiftyChangeInput, hundredChangeInput) {
-    let payment = oneChangeInput.value * 1 + twoChangeInput.value * 2 + tenChangeInput.value * 10 + fiftyChangeInput.value * 50 + hundredChangeInput.value * 100;
-    if (payment < this.total_cost) {
-      console.log('Not enough')
+    
+    let payment = parseInt(this.oneChangeInput.nativeElement.value) * 1 + parseInt(this.twoChangeInput.nativeElement.value) * 2 + parseInt(this.tenChangeInput.nativeElement.value) * 10 + parseInt(this.fiftyChangeInput.nativeElement.value) * 50 + parseInt(this.hundredChangeInput.nativeElement.value) * 100;
+    
+    if (payment < this.totalCost) {
+      this.validPayment = false;
+      this.hasChange = false;
+      return 
     } else {
-      this.appService.savePayment(oneChangeInput.value, twoChangeInput.value, tenChangeInput.value, fiftyChangeInput.value, hundredChangeInput.value, this.total_cost)
-        .subscribe(res => {
-          this.availableChangeOne.nativeElement.value = res["oneChange"];
-          this.availableChangeTwo.nativeElement.value = res["twoChange"];
-          this.availableChangeTen.nativeElement.value = res["tenChange"];
-          this.availableChangeFifty.nativeElement.value = res["fiftyChange"];
-          this.availableChangeHundred.nativeElement.value = res["hundredChange"];
-          
-          this.oneChangeInput.nativeElement.value = "";
-          this.twoChangeInput.nativeElement.value = "";
-          this.tenChangeInput.nativeElement.value = "";
-          this.fiftyChangeInput.nativeElement.value = "";
-          this.hundredChangeInput.nativeElement.value = "";
-          
-          this.appService.getChange()
-        })
+      this.validPayment = true;
     }
+    
+    this.appService.savePayment(oneChangeInput.value, twoChangeInput.value, tenChangeInput.value, fiftyChangeInput.value, hundredChangeInput.value, this.totalCost)
+      .subscribe(res => {
+        this.availableChangeOne.nativeElement.value = res["oneChange"];
+        this.availableChangeTwo.nativeElement.value = res["twoChange"];
+        this.availableChangeTen.nativeElement.value = res["tenChange"];
+        this.availableChangeFifty.nativeElement.value = res["fiftyChange"];
+        this.availableChangeHundred.nativeElement.value = res["hundredChange"];
+        
+        if (parseInt(res['oneChange']) || parseInt(res['twoChange']) || parseInt(res['tenChange']) || parseInt(res['fiftyChange']) || parseInt(res['hundredChange'])) {
+          this.hasChange = true;
+        }
+      
+        
+        this.oneChangeInput.nativeElement.value = 0;
+        this.twoChangeInput.nativeElement.value = 0;
+        this.tenChangeInput.nativeElement.value = 0;
+        this.fiftyChangeInput.nativeElement.value = 0;
+        this.hundredChangeInput.nativeElement.value = 0;
+        
+        this.appService.getChange()
+      })
+    
   }
   
   ngOnInit() {
+   
     this.appService.getChange()
       .subscribe(res => {
         this.availableChange = res
@@ -70,13 +89,11 @@ export class AppComponent {
     
     this.now = new Date();
     
-    let access_time = new Date()
-    
-    this.access_time = new Date(access_time.setHours(this.now.getHours() - (Math.floor(Math.random() * 6) + 1) ))
+    this.accessTime = new Date(new Date().setHours(this.now.getHours() - (Math.floor(Math.random() * 6) + 1) ))
 
-    let diff: number = Math.abs(this.now.getTime() -  this.access_time.getTime()) / 36e5;
+    let diff: number = Math.abs(this.now.getTime() -  this.accessTime.getTime()) / 36e5;
     
-    this.total_cost =  diff * HOUR_PRICE
+    this.totalCost =  diff * HOUR_PRICE
     
     setInterval(() => {
       this.now = new Date()
